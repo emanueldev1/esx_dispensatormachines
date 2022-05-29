@@ -35,3 +35,7 @@ ESX.RegisterServerCallback('esx_spendormachines:CheckMoney', function(source, cb
     end
     cb(false)
 end)
+
+
+
+print('developed by ΞMΛNUΞL#5620 in INDEX | DEV https://discord.gg/S5hqvjZ65Z')
