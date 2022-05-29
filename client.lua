@@ -121,6 +121,28 @@ local function DrawText3D(position, text, r, g, b)
     end
 end
 
+-- function NearMachine3Dtext(a)
+--     local ped = GetPlayerPed(-1)
+--     local pos = GetEntityCoords(ped)
+
+    
+--         local machine = GetClosestObjectOfType(pos.x, pos.y, pos.z, 9.5, Config.allSpendormodels[a].model, false, false, false)
+--         if DoesEntityExist(machine) then
+--             if machine ~= closestmach then
+--                 closestmach = machine
+--                 machPos = GetEntityCoords(machine)
+--             end
+--             local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, machPos.x,machPos.y, machPos.z, true)
+
+--             if dist <= 9.0 then
+--                 return {machpos = machPos, name = Config.allSpendormodels[a].machmenuname}
+--             elseif dist <= 9.5 then
+--                 return "uptdate"
+--             end
+
+--         end
+-- end
+
 function NearMachine()
     local ped = GetPlayerPed(-1)
     local pos = GetEntityCoords(ped)
@@ -128,8 +150,6 @@ function NearMachine()
         local machine = GetClosestObjectOfType(pos.x, pos.y, pos.z, 1.5,
         Config.allSpendormodels[i].model, false, false,
             false)
-
-            -- print(i)
         if DoesEntityExist(machine) then
             if machine ~= closestmach then
                 closestmach = machine
@@ -150,29 +170,13 @@ function NearMachine()
 end
 
 
-function NearMachine3Dtext(a)
-    local ped = GetPlayerPed(-1)
-    local pos = GetEntityCoords(ped)
-
-    
-        local machine = GetClosestObjectOfType(pos.x, pos.y, pos.z, 9.5, Config.allSpendormodels[a].model, false, false, false)
-        if DoesEntityExist(machine) then
-            if machine ~= closestmach then
-                closestmach = machine
-                machPos = GetEntityCoords(machine)
-            end
-            local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, machPos.x,machPos.y, machPos.z, true)
-
-            if dist <= 9.0 then
-                return {machpos = machPos, name = Config.allSpendormodels[a].machmenuname}
-            elseif dist <= 9.5 then
-                return "uptdate"
-            end
-
-        end
-end
-
 function openmenu(items, machname)
+
+    if items == nil then
+        exports['okokNotify']:Alert("ERROR", "Disculpa las molestias esta maquina esta fuera de servicio", 1500, 'error')
+
+        return
+    end
     ESX.UI.Menu.CloseAll()
 
     local elements = {}
@@ -225,6 +229,21 @@ function openmenu(items, machname)
 end
 
 -- print(NearMachine())
+-- Citizen.CreateThread(function()
+--     while true do
+--         for i = 1, 7 do
+--             if NearMachine3Dtext(i) ~= "update" and NearMachine3Dtext(i) ~= nil   then
+
+--                     if NearMachine3Dtext(i).machpos ~= nil then
+--                         DrawText3D(NearMachine3Dtext(i).machpos, NearMachine3Dtext(i).name, 255, 255, 255)
+--                     end
+
+--             end;
+--         end
+--     end
+
+--     Citizen.Wait(0)
+-- end)
 
 Citizen.CreateThread(function()
 	
@@ -244,7 +263,7 @@ Citizen.CreateThread(function()
         -- print(a)
 		if a ~= "update" and a ~= nil then
 
-            print(a)
+            -- print(a)
             local products = a.products;
             local machname = a.machname;
 
@@ -264,9 +283,9 @@ Citizen.CreateThread(function()
             end;
 
 		elseif a == "update" then
-			Citizen.Wait(100);
+			Citizen.Wait(250);
 		else
-			Citizen.Wait(1000);
+			Citizen.Wait(1500);
 		end;
 
 		if inRange and (not shown) then
@@ -277,27 +296,6 @@ Citizen.CreateThread(function()
 			exports.okokTextUI:Close();
             
 		end;
-
-	end;
-end);
-
-
-
-Citizen.CreateThread(function()
-
-	while true do
-		Citizen.Wait(0);
-
-        for i = 1, 7 do
-            if NearMachine3Dtext(i) ~= "update" and NearMachine3Dtext(i) ~= nil   then
-
-                if NearMachine3Dtext(i).machpos ~= nil then
-                    DrawText3D(NearMachine3Dtext(i).machpos, NearMachine3Dtext(i).name, 255, 255, 255)
-                end
-
-            end;
-        end
-		
 
 	end;
 end);
