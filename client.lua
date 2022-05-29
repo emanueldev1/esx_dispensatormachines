@@ -78,7 +78,6 @@ local Keys = {
 
 ESX = nil;
 local inRange = false;
-local shown = false;
 local closestmach, machPos;
 
 format = string.format;
@@ -125,11 +124,12 @@ end
 function NearMachine()
     local ped = GetPlayerPed(-1)
     local pos = GetEntityCoords(ped)
-    local machineno = 1;
-    for i = machineno, #Config.allSpendormodels do
-        local machine = GetClosestObjectOfType(pos.x, pos.y, pos.z, 1.5 + 5,
+    for i = 1, #Config.allSpendormodels do
+        local machine = GetClosestObjectOfType(pos.x, pos.y, pos.z, 1.5,
         Config.allSpendormodels[i].model, false, false,
             false)
+
+            -- print(i)
         if DoesEntityExist(machine) then
             if machine ~= closestmach then
                 closestmach = machine
@@ -137,29 +137,25 @@ function NearMachine()
             end
             local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, machPos.x,machPos.y, machPos.z, true)
 
-            if dist <= 1.5 then
+            if dist <= 1.4 then
+                -- print({products = Config.allSpendormodels[i].products, machname = Config.allSpendormodels[i].machmenuname, near = true, machpos = machPos })
                 return {products = Config.allSpendormodels[i].products, machname = Config.allSpendormodels[i].machmenuname, near = true, machpos = machPos }
-            elseif dist <= 1.5 + 5 then
-                return {near = "uptdate"}
+            elseif dist <= 1.5 then
+                return "uptdate"
             end
 
-        else
-
-            return {near = false}
-
         end
-
-        machineno = machineno + 1;
 
     end
 end
 
-function NearMachine3Dtext()
+
+function NearMachine3Dtext(a)
     local ped = GetPlayerPed(-1)
     local pos = GetEntityCoords(ped)
 
-    for i = 1, #Config.allSpendormodels do
-        local machine = GetClosestObjectOfType(pos.x, pos.y, pos.z, 9.5, Config.allSpendormodels[i].model, false, false, false)
+    
+        local machine = GetClosestObjectOfType(pos.x, pos.y, pos.z, 9.5, Config.allSpendormodels[a].model, false, false, false)
         if DoesEntityExist(machine) then
             if machine ~= closestmach then
                 closestmach = machine
@@ -168,17 +164,12 @@ function NearMachine3Dtext()
             local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, machPos.x,machPos.y, machPos.z, true)
 
             if dist <= 9.0 then
-                return {products = Config.allSpendormodels[i].products, machname = Config.allSpendormodels[i].machmenuname, near = true, machpos = machPos }
+                return {machpos = machPos, name = Config.allSpendormodels[a].machmenuname}
             elseif dist <= 9.5 then
-                return {near = "uptdate"}
+                return "uptdate"
             end
 
-        else
-
-            return {near = false}
-
         end
-    end
 end
 
 function openmenu(items, machname)
@@ -206,7 +197,7 @@ function openmenu(items, machname)
     }, function(data, menu)
         local payAmount =  data.current["price"] * data.current.value
 
-		if not inRange and shown then
+		if not inRange then
 
             ESX.TriggerServerCallback('esx_spendormachines:CheckMoney', function(hasMoney)
                 if hasMoney then
@@ -233,7 +224,7 @@ function openmenu(items, machname)
     end, function(data, menu) menu.close() end)
 end
 
-
+-- print(NearMachine())
 
 Citizen.CreateThread(function()
 	
@@ -241,29 +232,38 @@ Citizen.CreateThread(function()
 	local anim = "enter";
 	local ped = GetPlayerPed(-1);
 
+    local shown = false;
+
 	while true do
 
 		inRange = false;
 		Citizen.Wait(0);
 
+        local a = NearMachine()
 
-		if NearMachine().near ~= "update" and NearMachine().near == true  then
+        -- print(a)
+		if a ~= "update" and a ~= nil then
 
-            local products = NearMachine().products;
-            local machname = NearMachine().machname;
+            print(a)
+            local products = a.products;
+            local machname = a.machname;
 
 			if not Config.okokTextUI then
 				ESX.ShowHelpNotification("Pulsa [E] para ver lo que tiene la ~b~ maquina");
 			else
-				inRange = true;
-			end;
 
-            if IsControlJustPressed(1, Keys['E']) or IsDisabledControlJustPressed(1, Keys['E']) then
-                    openmenu(products, machname);
+                if a ~= 'uptdate' then
+				    inRange = true;
+                end
+			end;
+            -- print('esperando pressed')
+            if IsControlJustPressed(1, 38) or IsDisabledControlJustPressed(1,38) and a ~= 'uptdate'  then
+                -- print(json.encode(products))
+                openmenu(products, machname);
 
             end;
 
-		elseif NearMachine().near == "update" then
+		elseif a == "update" then
 			Citizen.Wait(100);
 		else
 			Citizen.Wait(1000);
@@ -288,19 +288,15 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0);
 
-		if NearMachine3Dtext().near ~= "update" and NearMachine3Dtext().near == true  then
+        for i = 1, 7 do
+            if NearMachine3Dtext(i) ~= "update" and NearMachine3Dtext(i) ~= nil   then
 
-            local machname = NearMachine3Dtext().machname;
-            local pos = NearMachine3Dtext().machpos;
-            DrawText3D(pos, machname, 255, 255, 255)
-			
+                if NearMachine3Dtext(i).machpos ~= nil then
+                    DrawText3D(NearMachine3Dtext(i).machpos, NearMachine3Dtext(i).name, 255, 255, 255)
+                end
 
-		elseif NearMachine3Dtext().near == "update" then
-			Citizen.Wait(100);
-		else
-			Citizen.Wait(1000);
-		end;
-
+            end;
+        end
 		
 
 	end;

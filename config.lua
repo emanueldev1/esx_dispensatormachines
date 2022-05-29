@@ -1,7 +1,8 @@
 Config = {}
 Config.okokTextUI = true
+
 Config.allSpendormodels = {
-    {
+    [1] = {
         ['model'] = -654402915,
         ['machmenuname'] = "Expendedora de snaks",
         ['products'] = {
@@ -15,7 +16,7 @@ Config.allSpendormodels = {
         ['status'] = true
     },
 
-    {
+    [2] = {
         ['model'] = -1034034125,
         ['machmenuname'] = "Expendedora de snaks",
         ['products'] = {
@@ -30,7 +31,7 @@ Config.allSpendormodels = {
 
     },
 
-    {
+    [3] = {
         ['model'] = 992069095,
         ['machmenuname'] = "Expendedora de Cocacola",
         ['products'] = {
@@ -42,7 +43,7 @@ Config.allSpendormodels = {
 
     },
 
-    {
+   [4] = {
         ['model'] = -1317235795, 
         ['machmenuname'] = "Expendedora de Cocacola",
         ['products'] = {
@@ -54,7 +55,7 @@ Config.allSpendormodels = {
 
     },
 
-    {
+   [5] = {
         ['model'] = 1114264700, 
         ['machmenuname'] = "Expendedora de Soda de limon",
         ['products'] = {
@@ -65,7 +66,7 @@ Config.allSpendormodels = {
 
     },
 
-    {
+   [6] = {
         ['model'] = 1099892058, 
         ['machmenuname'] = "Expendedora de agua",
         ['products'] = {
@@ -76,7 +77,7 @@ Config.allSpendormodels = {
 
     },
 
-    {
+   [7] = {
         ['model'] = 690372739, 
         ['machmenuname'] = "Expendedora de Cafe",
         ['products'] = {
