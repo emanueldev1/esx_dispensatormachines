@@ -3,7 +3,7 @@ games { 'rdr3', 'gta5' }
 
 author 'ΞMΛNUΞL#5620'
 description 'Spendor machines'
-version '1.0 ALPHA'
+version '1.0'
 
 
 
